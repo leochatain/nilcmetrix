@@ -196,16 +196,14 @@ class LsaSentenceAllStd(LsaBase):
         O desvio padrão entre esses valores é 0,14.
     """
 
-    name = 'LSA sentence all (within paragraph) std'
+    name = 'LSA sentence all std'
     column_name = 'lsa_all_std'
 
     def get_pairs(self, t, rp):
-        for paragraph in rp.paragraphs(t):
-            sentences = senter.tokenize(paragraph)
-            tokens = [word_tokenize(sent) for sent in sentences]
+        tokens = rp.tokens(t)
+        tokens = [[token.lower() for token in sentence] for sentence in tokens]
 
-            for s1, s2 in all_pairs(tokens):
-                yield s1, s2
+        return all_pairs(tokens)
 
     def get_value(self, similarities):
         return np.array(similarities).std()
